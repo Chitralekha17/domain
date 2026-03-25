@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MAISON — Interior Design Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --warm-white: #faf8f4;
+      --clay: #c8a882;
+      --terracotta: #b5714a;
+      --charcoal: #2c2820;
+      --stone: #8c8070;
+      --linen: #e8dece;
+      --ink: #1a1612;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* Custom Cursor */
+    .cursor {
+      width: 10px; height: 10px;
+      background: var(--terracotta);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid var(--clay);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.4s cubic-bezier(.17,.67,.83,.67), width 0.3s, height 0.3s, opacity 0.3s;
+      transform: translate(-50%, -50%);
+      opacity: 0.6;
+    }
+    body:hover .cursor { transform: translate(-50%, -50%) scale(1); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--cream); }
+    ::-webkit-scrollbar-thumb { background: var(--clay); border-radius: 2px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 60px;
+      mix-blend-mode: multiply;
+      backdrop-filter: blur(0px);
+      transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(250,248,244,0.92);
+      backdrop-filter: blur(12px);
+      padding: 18px 60px;
+      border-bottom: 1px solid var(--linen);
+      mix-blend-mode: normal;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--terracotta); }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      text-decoration: none;
+      font-weight: 400;
+      position: relative;
+      padding-bottom: 2px;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--terracotta);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-actions { display: flex; gap: 20px; align-items: center; }
+    .nav-icon {
+      background: none; border: none; cursor: none;
+      color: var(--charcoal); font-size: 1.1rem; padding: 4px;
+      transition: color 0.2s;
+    }
+    .nav-icon:hover { color: var(--terracotta); }
+    .cart-btn {
+      font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+      border: 1px solid var(--charcoal); padding: 10px 22px;
+      background: none; cursor: none; color: var(--charcoal);
+      transition: background 0.3s, color 0.3s;
+    }
+    .cart-btn:hover { background: var(--charcoal); color: var(--warm-white); }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-left {
+      background: var(--cream);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 80px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-left::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 20% 80%, rgba(200,168,130,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--stone); margin-bottom: 28px;
+      animation: fadeUp 1s 0.3s both;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 7vw, 7.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--ink);
+      margin-bottom: 36px;
+      animation: fadeUp 1s 0.5s both;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+    .hero-sub {
+      font-size: 0.95rem; line-height: 1.8;
+      color: var(--stone); max-width: 380px;
+      margin-bottom: 52px;
+      animation: fadeUp 1s 0.7s both;
+      font-weight: 300;
+    }
+    .hero-cta-group {
+      display: flex; gap: 20px; align-items: center;
+      animation: fadeUp 1s 0.9s both;
+    }
+    .btn-primary {
+      background: var(--terracotta); color: white;
+      border: none; padding: 16px 40px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem; letter-spacing: 0.2em;
+      text-transform: uppercase; cursor: none;
+      text-decoration: none; display: inline-block;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--charcoal); transform: translateY(-1px); }
+    .btn-ghost {
+      color: var(--charcoal); font-size: 0.75rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-ghost:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .btn-ghost::after { content: '→'; transition: transform 0.3s; }
+    .btn-ghost:hover::after { transform: translateX(4px); }
+
+    .hero-right {
+      position: relative; overflow: hidden;
+    }
+    .hero-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transform: scale(1.05);
+      animation: zoomIn 2s 0.2s cubic-bezier(.25,.46,.45,.94) both;
+    }
+    .hero-right-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(181,113,74,0.08) 0%, transparent 50%);
+    }
+    .hero-number {
+      position: absolute; bottom: 100px; left: -30px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 9rem; font-weight: 300;
+      color: rgba(200,168,130,0.2);
+      line-height: 1; pointer-events: none;
+      animation: fadeUp 1.5s 0.4s both;
+    }
+    .hero-scroll-hint {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 0.65rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--stone);
+      animation: fadeIn 1.5s 1.5s both;
+      z-index: 10;
+    }
+    .scroll-line {
+      width: 1px; height: 40px; background: var(--clay);
+      animation: scrollPulse 2s 2s infinite;
+    }
+
+    /* ── MARQUEE ── */
+    .marquee-bar {
+      background: var(--charcoal); padding: 14px 0;
+      overflow: hidden; display: flex;
+    }
+    .marquee-track {
+      display: flex; gap: 0; white-space: nowrap;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-item {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-style: italic; font-weight: 300;
+      color: var(--clay); padding: 0 48px;
+      letter-spacing: 0.05em;
+    }
+    .marquee-dot { color: var(--terracotta); }
+
+    /* ── FEATURED CATEGORIES ── */
+    .section { padding: 120px 80px; }
+    .section-header {
+      display: flex; justify-content: space-between;
+      align-items: flex-end; margin-bottom: 70px;
+    }
+    .section-label {
+      font-size: 0.65rem; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--clay);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 4vw, 4.2rem);
+      font-weight: 300; color: var(--ink); line-height: 1.15;
+    }
+    .section-title em { font-style: italic; color: var(--terracotta); }
+    .section-link {
+      font-size: 0.72rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--stone);
+      text-decoration: none; display: flex; align-items: center; gap: 8px;
+      transition: color 0.3s;
+    }
+    .section-link:hover { color: var(--terracotta); }
+    .section-link::after { content: '→'; transition: transform 0.3s; }
+    .section-link:hover::after { transform: translateX(4px); }
+
+    .categories-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 16px;
+    }
+    .cat-card {
+      position: relative; overflow: hidden; cursor: none;
+      background: var(--linen);
+    }
+    .cat-card:first-child { grid-row: span 2; }
+    .cat-img {
+      width: 100%; height: 100%;
+      min-height: 280px; object-fit: cover;
+      transition: transform 0.7s cubic-bezier(.25,.46,.45,.94);
+      display: block;
+    }
+    .cat-card:first-child .cat-img { min-height: 580px; }
+    .cat-card:hover .cat-img { transform: scale(1.06); }
+    .cat-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,22,18,0.65) 0%, transparent 55%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 32px;
+      transition: background 0.4s;
+    }
+    .cat-card:hover .cat-overlay {
+      background: linear-gradient(to top, rgba(26,22,18,0.75) 0%, transparent 50%);
+    }
+    .cat-tag {
+      font-size: 0.62rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--clay);
+      margin-bottom: 8px;
+    }
+    .cat-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 400;
+      color: white; margin-bottom: 14px;
+      transform: translateY(4px); transition: transform 0.3s;
+    }
+    .cat-card:first-child .cat-name { font-size: 2.6rem; }
+    .cat-card:hover .cat-name { transform: translateY(0); }
+    .cat-action {
+      font-size: 0.65rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6);
+      text-decoration: none; opacity: 0; transform: translateY(8px);
+      transition: opacity 0.3s, transform 0.3s;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .cat-action::after { content: '→'; }
+    .cat-card:hover .cat-action { opacity: 1; transform: translateY(0); }
+
+    /* ── FEATURED PRODUCTS ── */
+    .products-section { background: var(--cream); padding: 120px 80px; }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+    }
+    .product-card { cursor: none; }
+    .product-img-wrap {
+      position: relative; overflow: hidden;
+      background: var(--linen); margin-bottom: 20px;
+      aspect-ratio: 3/4;
+    }
+    .product-img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.7s cubic-bezier(.25,.46,.45,.94);
+    }
+    .product-card:hover .product-img { transform: scale(1.06); }
+    .product-badge {
+      position: absolute; top: 18px; left: 18px;
+      font-size: 0.58rem; letter-spacing: 0.25em;
+      text-transform: uppercase; padding: 6px 12px;
+      background: var(--terracotta); color: white;
+    }
+    .product-wish {
+      position: absolute; top: 14px; right: 14px;
+      background: white; border: none; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: none; font-size: 1rem; color: var(--stone);
+      opacity: 0; transform: translateY(-4px);
+      transition: opacity 0.3s, transform 0.3s, color 0.2s;
+    }
+    .product-card:hover .product-wish { opacity: 1; transform: translateY(0); }
+    .product-wish:hover { color: var(--terracotta); }
+    .product-add {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--charcoal); color: white; border: none;
+      padding: 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      cursor: none; opacity: 0; transform: translateY(100%);
+      transition: opacity 0.3s, transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+    .product-card:hover .product-add { opacity: 1; transform: translateY(0); }
+    .product-add:hover { background: var(--terracotta); }
+    .product-meta { display: flex; justify-content: space-between; align-items: flex-start; }
+    .product-info { flex: 1; }
+    .product-collection {
+      font-size: 0.6rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--clay); margin-bottom: 4px;
+    }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 400; color: var(--ink);
+      line-height: 1.3; margin-bottom: 6px;
+    }
+    .product-price { font-size: 0.88rem; color: var(--stone); font-weight: 300; }
+    .product-price strong { color: var(--charcoal); font-weight: 500; }
+
+    /* ── EDITORIAL / LOOKBOOK ── */
+    .editorial { padding: 0; display: grid; grid-template-columns: 1fr 1fr; min-height: 75vh; }
+    .editorial-img { position: relative; overflow: hidden; }
+    .editorial-img img { width: 100%; height: 100%; object-fit: cover; min-height: 600px; display: block; }
+    .editorial-content {
+      background: var(--charcoal); color: white;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 100px 90px;
+    }
+    .editorial-label {
+      font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--clay); margin-bottom: 30px;
+    }
+    .editorial-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4vw, 4.5rem);
+      font-weight: 300; line-height: 1.1; margin-bottom: 30px;
+    }
+    .editorial-title em { font-style: italic; color: var(--clay); }
+    .editorial-text {
+      font-size: 0.9rem; line-height: 1.9; color: rgba(255,255,255,0.55);
+      max-width: 400px; margin-bottom: 50px; font-weight: 300;
+    }
+    .btn-light {
+      display: inline-block; border: 1px solid var(--clay);
+      color: var(--clay); padding: 14px 36px;
+      font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+      text-decoration: none; cursor: none; width: fit-content;
+      transition: background 0.3s, color 0.3s;
+    }
+    .btn-light:hover { background: var(--clay); color: var(--charcoal); }
+
+    /* ── SERVICES ── */
+    .services { padding: 120px 80px; background: var(--warm-white); }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--linen); margin-top: 70px; }
+    .service-item {
+      background: var(--warm-white); padding: 60px 50px;
+      text-align: center; transition: background 0.3s;
+    }
+    .service-item:hover { background: var(--cream); }
+    .service-icon {
+      font-size: 2rem; margin-bottom: 24px; display: block;
+      color: var(--terracotta);
+    }
+    .service-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 400; color: var(--ink); margin-bottom: 14px;
+    }
+    .service-text {
+      font-size: 0.85rem; line-height: 1.75; color: var(--stone);
+      font-weight: 300; max-width: 260px; margin: 0 auto;
+    }
+
+    /* ── TESTIMONIAL ── */
+    .testimonial {
+      background: var(--clay); padding: 100px 80px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .testimonial::before {
+      content: '"';
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28rem; font-weight: 300;
+      color: rgba(255,255,255,0.06);
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      line-height: 1; pointer-events: none;
+    }
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 3vw, 2.8rem);
+      font-weight: 300; font-style: italic;
+      color: white; line-height: 1.5; max-width: 760px; margin: 0 auto 36px;
+      position: relative;
+    }
+    .testimonial-author {
+      font-size: 0.7rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: rgba(255,255,255,0.65);
+    }
+    .testimonial-stars { color: white; font-size: 0.9rem; letter-spacing: 4px; margin-bottom: 28px; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter { background: var(--cream); padding: 100px 80px; text-align: center; }
+    .newsletter-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 300; color: var(--ink); margin-bottom: 16px;
+    }
+    .newsletter-title em { font-style: italic; color: var(--terracotta); }
+    .newsletter-sub {
+      font-size: 0.88rem; color: var(--stone); margin-bottom: 44px;
+      font-weight: 300; letter-spacing: 0.02em;
+    }
+    .newsletter-form { display: flex; max-width: 480px; margin: 0 auto; }
+    .newsletter-input {
+      flex: 1; padding: 16px 24px;
+      border: 1px solid var(--linen); background: white;
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      color: var(--charcoal); outline: none;
+      transition: border-color 0.3s;
+    }
+    .newsletter-input:focus { border-color: var(--clay); }
+    .newsletter-input::placeholder { color: var(--stone); }
+    .newsletter-submit {
+      background: var(--terracotta); color: white; border: none;
+      padding: 16px 32px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase;
+      cursor: none; transition: background 0.3s;
+    }
+    .newsletter-submit:hover { background: var(--charcoal); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink); color: white; padding: 80px 80px 40px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px; margin-bottom: 60px;
+    }
+    .footer-brand .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; letter-spacing: 0.35em;
+      color: white; text-decoration: none; display: block; margin-bottom: 20px;
+    }
+    .footer-brand .logo span { color: var(--clay); }
+    .footer-brand p {
+      font-size: 0.83rem; line-height: 1.8; color: rgba(255,255,255,0.4);
+      font-weight: 300; max-width: 280px;
+    }
+    .footer-social { display: flex; gap: 16px; margin-top: 28px; }
+    .social-link {
+      width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.8rem;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .social-link:hover { border-color: var(--clay); color: var(--clay); }
+    .footer-col h4 {
+      font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--clay); margin-bottom: 22px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      font-size: 0.82rem; color: rgba(255,255,255,0.45);
+      text-decoration: none; font-weight: 300;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: white; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 32px; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p {
+      font-size: 0.72rem; color: rgba(255,255,255,0.25);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(1.12); }
+      to   { transform: scale(1.05); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.3; transform: scaleY(0.6); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── REVEAL ON SCROLL ── */
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 22px 30px; }
+      nav.scrolled { padding: 14px 30px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 0 30px 70px; }
+      .section, .products-section, .services, .newsletter { padding: 80px 30px; }
+      .categories-grid { grid-template-columns: 1fr 1fr; }
+      .cat-card:first-child { grid-column: span 2; }
+      .products-grid { grid-template-columns: 1fr 1fr; }
+      .editorial { grid-template-columns: 1fr; }
+      .editorial-img { min-height: 350px; }
+      .editorial-content { padding: 70px 40px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">MAIS<span>O</span>N</a>
+    <ul class="nav-links">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#rooms">Rooms</a></li>
+      <li><a href="#designers">Designers</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon" aria-label="Search">⌕</button>
+      <button class="cart-btn">Cart (0)</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <span class="hero-eyebrow">New Collection 2026</span>
+      <h1 class="hero-title">Spaces<br>that <em>breathe</em><br>beauty</h1>
+      <p class="hero-sub">Curated furniture and décor for the home that tells your story — crafted by artisans, designed to last a lifetime.</p>
+      <div class="hero-cta-group">
+        <a href="#collections" class="btn-primary">Explore Collections</a>
+        <a href="#lookbook" class="btn-ghost">View Lookbook</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&auto=format&fit=crop" alt="Interior Design" class="hero-img"/>
+      <div class="hero-right-overlay"></div>
+      <span class="hero-number">01</span>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-bar">
+    <div class="marquee-track" id="marquee">
+      <span class="marquee-item">Handcrafted Furniture <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Curated Décor <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Bespoke Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Artisan Textiles <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Sustainable Materials <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Free Interior Consultation <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Worldwide Shipping <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Handcrafted Furniture <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Curated Décor <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Bespoke Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Artisan Textiles <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Sustainable Materials <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Free Interior Consultation <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Worldwide Shipping <span class="marquee-dot">✦</span></span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="section" id="collections">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-label">Explore</p>
+        <h2 class="section-title">Shop by <em>Room</em></h2>
+      </div>
+      <a href="#" class="section-link">All Categories</a>
+    </div>
+    <div class="categories-grid reveal">
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop" alt="Living Room" class="cat-img"/>
+        <div class="cat-overlay">
+          <span class="cat-tag">Featured</span>
+          <h3 class="cat-name">Living Room</h3>
+          <a href="#" class="cat-action">Browse Collection</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1616594039964-ae9021a400a0?w=600&auto=format&fit=crop" alt="Bedroom" class="cat-img"/>
+        <div class="cat-overlay">
+          <span class="cat-tag">New In</span>
+          <h3 class="cat-name">Bedroom</h3>
+          <a href="#" class="cat-action">Browse Collection</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&auto=format&fit=crop" alt="Kitchen" class="cat-img"/>
+        <div class="cat-overlay">
+          <span class="cat-tag">Trending</span>
+          <h3 class="cat-name">Kitchen</h3>
+          <a href="#" class="cat-action">Browse Collection</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&auto=format&fit=crop" alt="Office" class="cat-img"/>
+        <div class="cat-overlay">
+          <span class="cat-tag">Curated</span>
+          <h3 class="cat-name">Home Office</h3>
+          <a href="#" class="cat-action">Browse Collection</a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&auto=format&fit=crop" alt="Dining" class="cat-img"/>
+        <div class="cat-overlay">
+          <span class="cat-tag">Popular</span>
+          <h3 class="cat-name">Dining</h3>
+          <a href="#" class="cat-action">Browse Collection</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products-section" id="products">
+    <div class="section-header reveal">
+      <div>
+        <p class="section-label">Handpicked</p>
+        <h2 class="section-title">New <em>Arrivals</em></h2>
+      </div>
+      <a href="#" class="section-link">View All</a>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card reveal">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&auto=format&fit=crop" alt="Chair" class="product-img"/>
+          <span class="product-badge">New</span>
+          <button class="product-wish" aria-label="Wishlist">♡</button>
+          <button class="product-add">Add to Cart</button>
+        </div>
+        <div class="product-meta">
+          <div class="product-info">
+            <p class="product-collection">Artisan Series</p>
+            <h3 class="product-name">Repose Lounge Chair</h3>
+            <p class="product-price"><strong>₹ 68,500</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal" style="transition-delay:0.1s">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format&fit=crop" alt="Sofa" class="product-img"/>
+          <button class="product-wish" aria-label="Wishlist">♡</button>
+          <button class="product-add">Add to Cart</button>
+        </div>
+        <div class="product-meta">
+          <div class="product-info">
+            <p class="product-collection">Terra Collection</p>
+            <h3 class="product-name">Linen Cloud Sofa</h3>
+            <p class="product-price"><strong>₹ 1,24,000</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal" style="transition-delay:0.2s">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=500&auto=format&fit=crop" alt="Table" class="product-img"/>
+          <span class="product-badge">Bestseller</span>
+          <button class="product-wish" aria-label="Wishlist">♡</button>
+          <button class="product-add">Add to Cart</button>
+        </div>
+        <div class="product-meta">
+          <div class="product-info">
+            <p class="product-collection">Raw Studio</p>
+            <h3 class="product-name">Oak Slab Coffee Table</h3>
+            <p class="product-price"><strong>₹ 42,000</strong></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-card reveal" style="transition-delay:0.3s">
+        <div class="product-img-wrap">
+          <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=500&auto=format&fit=crop" alt="Lamp" class="product-img"/>
+          <button class="product-wish" aria-label="Wishlist">♡</button>
+          <button class="product-add">Add to Cart</button>
+        </div>
+        <div class="product-meta">
+          <div class="product-info">
+            <p class="product-collection">Lumière Edit</p>
+            <h3 class="product-name">Woven Arc Floor Lamp</h3>
+            <p class="product-price"><strong>₹ 28,900</strong></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EDITORIAL -->
+  <section class="editorial" id="lookbook">
+    <div class="editorial-img">
+      <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?w=900&auto=format&fit=crop" alt="Lookbook"/>
+    </div>
+    <div class="editorial-content">
+      <p class="editorial-label">2026 Lookbook</p>
+      <h2 class="editorial-title">The Art of<br><em>Living Well</em></h2>
+      <p class="editorial-text">Our new collection is an ode to slow living — spaces designed with intention, filled with objects that age beautifully. Discover how considered design transforms a house into a home.</p>
+      <a href="#" class="btn-light">Explore the Lookbook</a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="section-header reveal" style="justify-content:center; text-align:center; flex-direction:column; align-items:center;">
+      <p class="section-label">What We Offer</p>
+      <h2 class="section-title">Design <em>Services</em></h2>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-item">
+        <span class="service-icon">◎</span>
+        <h3 class="service-name">Interior Consultation</h3>
+        <p class="service-text">A one-on-one session with our design experts to shape a space that is uniquely, beautifully yours.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">⬡</span>
+        <h3 class="service-name">3D Room Planning</h3>
+        <p class="service-text">Visualise your space before you commit — photorealistic renders crafted for every room in your home.</p>
+      </div>
+      <div class="service-item">
+        <span class="service-icon">⟡</span>
+        <h3 class="service-name">White Glove Delivery</h3>
+        <p class="service-text">From warehouse to your room — professional assembly, installation, and packaging removal included.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial">
+    <p class="testimonial-stars">★★★★★</p>
+    <blockquote class="testimonial-text">"Every piece from MAISON feels like it was made specifically for our home. The quality is extraordinary and the service is simply unmatched."</blockquote>
+    <p class="testimonial-author">— Priya Reddy, Mumbai</p>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="reveal">
+      <h2 class="newsletter-title">Design <em>Inspiration</em><br>in your inbox</h2>
+      <p class="newsletter-sub">Styling tips, new arrivals, and exclusive offers — curated weekly.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="Your email address"/>
+        <button class="newsletter-submit">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">MAIS<span>O</span>N</a>
+        <p>Curating exceptional spaces through timeless design, ethical sourcing, and the belief that beauty should be lived in every day.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link" aria-label="Instagram">In</a>
+          <a href="#" class="social-link" aria-label="Pinterest">Pi</a>
+          <a href="#" class="social-link" aria-label="Facebook">Fb</a>
+          <a href="#" class="social-link" aria-label="YouTube">Yt</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Living Room</a></li>
+          <li><a href="#">Bedroom</a></li>
+          <li><a href="#">Dining</a></li>
+          <li><a href="#">Kitchen</a></li>
+          <li><a href="#">Lighting</a></li>
+          <li><a href="#">Textiles</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Interior Design</a></li>
+          <li><a href="#">3D Visualisation</a></li>
+          <li><a href="#">Trade Programme</a></li>
+          <li><a href="#">Gift Registry</a></li>
+          <li><a href="#">Corporate</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Care Guides</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 MAISON Interior Design Store. All rights reserved.</p>
+      <p>Privacy Policy · Terms of Service · Cookie Settings</p>
+    </div>
+  </footer>
+
+  <script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx + 'px'; cursor.style.top = my + 'px'; });
+    function animateRing() { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animateRing); }
+    animateRing();
+
+    // Nav scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => { navbar.classList.toggle('scrolled', window.scrollY > 60); });
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Wishlist toggle
+    document.querySelectorAll('.product-wish').forEach(btn => {
+      btn.addEventListener('click', function() {
+        this.textContent = this.textContent === '♡' ? '♥' : '♡';
+        this.style.color = this.textContent === '♥' ? 'var(--terracotta)' : '';
+      });
+    });
+
+    // Newsletter
+    document.querySelector('.newsletter-submit').addEventListener('click', function() {
+      const input = document.querySelector('.newsletter-input');
+      if (input.value && input.value.includes('@')) {
+        this.textContent = 'Subscribed ✓';
+        this.style.background = '#5a7c5a';
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
